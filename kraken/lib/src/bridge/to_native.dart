@@ -11,9 +11,12 @@ import 'dart:typed_data';
 import 'package:ffi/ffi.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter/widgets.dart' hide Element;
 import 'package:kraken/dom.dart';
 import 'package:kraken/kraken.dart';
 import 'package:kraken/module.dart';
+import 'package:kraken/src/new_render/node_base_widget.dart';
+import 'package:kraken/src/new_render/register_center.dart';
 
 import 'from_native.dart';
 import 'native_types.dart';
@@ -507,7 +510,16 @@ void flushUICommand() {
       } catch (e, stack) {
         print('$e\n$stack');
       }
+
     }
+    // Node pNode = controller.view.elementManager.document.childNodes[0].childNodes[1];
+
+    Widget w = convertToWidget(controller.view.elementManager.document.childNodes[0].childNodes[1]);
+    if (w is NodePWidget && w.children.isNotEmpty) {
+      RegisterCenter.sharedInstance().rootWidget = w.children[0];
+
+    }
+    // RegisterCenter.sharedInstance().rootWidget = w;
 
     // For pending style properties, we needs to flush to render style.
     for (int id in pendingStylePropertiesTargets.keys) {
@@ -520,3 +532,35 @@ void flushUICommand() {
     pendingStylePropertiesTargets.clear();
   }
 }
+
+
+Widget convertToWidget(Node node) {
+  // List<NodeBaseWidget> children = <NodeBaseWidget>[];
+  // for (Node item in node.childNodes) {
+  //   children.add(_convert(item));
+  // }
+  // NodeBaseWidget result = NodeBaseWidget(nodeData: node.documentElement, children: children,);
+  // return result;
+  return _convert(node);
+}
+
+Widget _convert(Node node) {
+  List<Widget> children = <Widget>[];
+  for (Node item in node.childNodes) {
+    if (item is Element) {
+      children.add(_convert(item));
+    } else if (item is TextNode) {
+      children.add(_convert(item));
+    }
+  }
+  Widget result;
+  if (node is TextNode) {
+    result = NodeBaseSingleWidget(nodeData: node,);
+  } else {
+    result = NodePWidget(nodeData: node, children: children,);
+  }
+  return result;
+
+
+}
+

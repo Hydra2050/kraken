@@ -168,7 +168,7 @@ class Element extends Node
   String get nodeName => tagName;
 
   @override
-  RenderBox? get renderer => renderBoxModel;
+  RenderBox? get renderer => createRenderer();
 
   @override
   RenderBox createRenderer() {
@@ -577,14 +577,14 @@ class Element extends Node
       // HTML element override attachTo method to attach renderObject to viewportBox.
       if (parent is Element) {
         RenderLayoutBox? parentRenderLayoutBox = parentElement?._renderLayoutBox?.renderScrollingContent ?? parentElement?._renderLayoutBox;
-        parentRenderLayoutBox!.insert(renderBoxModel!, after: after);
+        // parentRenderLayoutBox!.insert(renderBoxModel!, after: after);
       } else if (parent is Document) {
         parent.appendChild(this);
       }
       // Flush pending style before child attached.
-      style.flushPendingProperties();
+      // style.flushPendingProperties();
 
-      didAttachRenderer();
+      // didAttachRenderer();
     }
   }
 
@@ -634,7 +634,7 @@ class Element extends Node
     if (child is Element) {
       child.renderStyle.parent = renderStyle;
     }
-    if (isRendererAttached) {
+    // if (isRendererAttached) {
       // Only append child renderer when which is not attached.
       if (!child.isRendererAttached && _renderLayoutBox != null) {
         RenderBox? after;
@@ -647,7 +647,7 @@ class Element extends Node
 
         child.attachTo(this, after: after);
       }
-    }
+    // }
 
     return child;
   }

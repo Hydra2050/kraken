@@ -109,8 +109,8 @@ abstract class EventTarget {
   Map<String, List<EventHandler>> eventHandlers = {};
 
   EventTarget(this.targetId, this.nativeEventTargetPtr, this.elementManager) {
-    nativeEventTargetPtr.ref.callNativeMethods = _nativeCallNativeMethods;
-    _nativeMap[nativeEventTargetPtr.address] = this;
+    // nativeEventTargetPtr.ref.callNativeMethods = _nativeCallNativeMethods;
+    // _nativeMap[nativeEventTargetPtr.address] = this;
   }
 
   void addEventListener(String eventType, EventHandler eventHandler) {

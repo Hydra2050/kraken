@@ -39,9 +39,9 @@ class HTMLElement extends Element {
   @override
   void attachTo(Node parent, {RenderBox? after}) {
     super.attachTo(parent);
-    if (renderBoxModel != null) {
-      elementManager.viewport.child = renderBoxModel!;
-    }
+    // if (renderBoxModel != null) {
+    //   elementManager.viewport.child = renderBoxModel!;
+    // }
   }
 
   @override

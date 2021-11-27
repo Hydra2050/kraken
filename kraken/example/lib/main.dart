@@ -1,12 +1,45 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
+import 'package:kraken/dom.dart';
 import 'package:kraken/kraken.dart';
+import 'package:kraken/rendering.dart';
 import 'package:kraken_websocket/kraken_websocket.dart';
-import 'package:kraken_devtools/kraken_devtools.dart';
+// import 'package:kraken_devtools/kraken_devtools.dart';
 import 'dart:ui';
 
 void main() {
   KrakenWebsocket.initialize();
+  Kraken.defineCustomElement('flutter-text', (targetId, nativeEventTarget, elementManager) {
+    return TextWidgetElement(targetId, nativeEventTarget, elementManager);
+  });
+  Kraken.defineCustomElement('demo-list', (targetId, nativeEventTarget, elementManager) {
+    return DemoListWidgetElement(targetId, nativeEventTarget, elementManager);
+  });
   runApp(MyApp());
+}
+
+class TextWidgetElement extends WidgetElement {
+  TextWidgetElement(int targetId, Pointer<NativeEventTarget> nativeEventTarget, ElementManager elementManager) :
+        super(targetId, nativeEventTarget, elementManager);
+
+  @override
+  Widget build(BuildContext context, Map<String, dynamic> properties, List<Widget> children) {
+    return Text(properties['value'] ?? '11111', textDirection: TextDirection.ltr, style: TextStyle(color: Color.fromARGB(
+        255, 100, 100, 100)));
+  }
+}
+
+class DemoListWidgetElement extends WidgetElement {
+  DemoListWidgetElement(int targetId, Pointer<NativeEventTarget> nativeEventTarget, ElementManager elementManager) :
+        super(targetId, nativeEventTarget, elementManager);
+
+  @override
+  Widget build(BuildContext context, Map<String, dynamic> properties, List<Widget> children) {
+    return ListView(
+      children: children,
+    );
+  }
 }
 
 class MyApp extends StatelessWidget {
@@ -41,6 +74,8 @@ class MyBrowser extends StatefulWidget {
 
 class _MyHomePageState extends State<MyBrowser> {
 
+  Kraken? _kraken;
+
   OutlineInputBorder outlineBorder = OutlineInputBorder(
     borderSide: BorderSide(color: Colors.transparent, width: 0.0),
     borderRadius: const BorderRadius.all(
@@ -48,12 +83,22 @@ class _MyHomePageState extends State<MyBrowser> {
     ),
   );
 
+  void _add() {
+    TextNode textNode = TextNode(2050, Pointer<NativeEventTarget>.fromAddress(0x22222), 'Demo', _kraken!.controller!.view.elementManager);
+    // textNode.parentElement = RegisterCenter.sharedInstance().
+    RegisterCenter.sharedInstance().testElement!.appendChild(textNode);
+  }
+
+  void _delete() {
+    RegisterCenter.sharedInstance().testElement!.removeChild(null);
+  }
+
   @override
   Widget build(BuildContext context) {
     final MediaQueryData queryData = MediaQuery.of(context);
     final TextEditingController textEditingController = TextEditingController();
 
-    Kraken? _kraken;
+
     AppBar appBar = AppBar(
         backgroundColor: Colors.black87,
         titleSpacing: 10.0,
@@ -89,12 +134,27 @@ class _MyHomePageState extends State<MyBrowser> {
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
         child: _kraken = Kraken(
-          devToolsService: ChromeDevToolsService(),
+          // devToolsService: ChromeDevToolsService(),
           viewportWidth: viewportSize.width - queryData.padding.horizontal,
           viewportHeight: viewportSize.height - appBar.preferredSize.height - queryData.padding.vertical,
           bundleURL: 'assets/bundle.js',
-          buildOwner: context.owner
         ),
-    ));
+      ),
+      floatingActionButton: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          FloatingActionButton(
+            onPressed: _add,
+            tooltip: 'Increment',
+            child: Icon(Icons.add),
+          ),
+          FloatingActionButton(
+            onPressed: _delete,
+            tooltip: 'Increment',
+            child: Icon(Icons.delete),
+          )
+        ],
+      ),
+    );
   }
 }

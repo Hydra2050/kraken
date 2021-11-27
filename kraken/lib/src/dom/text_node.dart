@@ -32,7 +32,7 @@ class TextNode extends Node {
 
     if (_d == null || _d.isEmpty) return '';
 
-    WhiteSpace whiteSpace = CSSText.resolveWhiteSpace(parentElement!.style[WHITE_SPACE]);
+    WhiteSpace whiteSpace = CSSText.resolveWhiteSpace(parentElement?.style[WHITE_SPACE]?? ' ');
 
     /// https://drafts.csswg.org/css-text-3/#propdef-white-space
     /// The following table summarizes the behavior of the various white-space values:
@@ -91,7 +91,7 @@ class TextNode extends Node {
   String get nodeName => '#text';
 
   @override
-  RenderBox? get renderer => _renderTextBox;
+  RenderBox? get renderer => createRenderer();
 
   void _applyTextStyle() {
     if (isRendererAttached) {
@@ -124,12 +124,12 @@ class TextNode extends Node {
 
     createRenderer();
 
-    if (parent.renderBoxModel is RenderLayoutBox) {
-      RenderLayoutBox parentRenderLayoutBox = parent.renderBoxModel as RenderLayoutBox;
-      parentRenderLayoutBox = parentRenderLayoutBox.renderScrollingContent ?? parentRenderLayoutBox;
-      parentRenderLayoutBox.insert(_renderTextBox!, after: after);
-      _applyTextStyle();
-    }
+    // if (parent.renderBoxModel is RenderLayoutBox) {
+    //   RenderLayoutBox parentRenderLayoutBox = parent.renderBoxModel as RenderLayoutBox;
+    //   parentRenderLayoutBox = parentRenderLayoutBox.renderScrollingContent ?? parentRenderLayoutBox;
+    //   parentRenderLayoutBox.insert(_renderTextBox!, after: after);
+    //   _applyTextStyle();
+    // }
   }
 
   // Detach renderObject of current node from parent
@@ -153,7 +153,7 @@ class TextNode extends Node {
     if (_renderTextBox != null) {
       return _renderTextBox!;
     }
-    return _renderTextBox = RenderTextBox(data, renderStyle: parentElement!.renderStyle);
+    return _renderTextBox = RenderTextBox(data, renderStyle: parentElement?.renderStyle ?? RenderStyle(target: (RegisterCenter.sharedInstance()!.rootWidget as NodePWidget).nodeData as Element));
   }
 
   @override

@@ -23,3 +23,5 @@ export 'src/rendering/opacity.dart';
 export 'src/rendering/transform.dart';
 export 'src/rendering/viewport.dart';
 export 'src/rendering/paragraph.dart';
+export 'src/new_render/register_center.dart';
+export 'src/new_render/node_base_widget.dart';

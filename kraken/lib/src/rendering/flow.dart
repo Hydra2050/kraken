@@ -35,107 +35,107 @@ class _RunMetrics {
 
 /// Impl flow layout algorithm.
 class RenderFlowLayout extends RenderLayoutBox {
-  RenderFlowLayout({
+    RenderFlowLayout({
     List<RenderBox>? children,
     required RenderStyle renderStyle,
-  }) : super(
+    }) : super(
     renderStyle: renderStyle,
-  ) {
+    ) {
     addAll(children);
-  }
+    }
 
-  /// The direction to use as the main axis.
-  ///
-  /// For example, if [direction] is [Axis.horizontal], the default, the
-  /// children are placed adjacent to one another in a horizontal run until the
-  /// available horizontal space is consumed, at which point a subsequent
-  /// children are placed in a new run vertically adjacent to the previous run.
-  Axis get direction => _direction;
-  Axis _direction = Axis.horizontal;
+    /// The direction to use as the main axis.
+    ///
+    /// For example, if [direction] is [Axis.horizontal], the default, the
+    /// children are placed adjacent to one another in a horizontal run until the
+    /// available horizontal space is consumed, at which point a subsequent
+    /// children are placed in a new run vertically adjacent to the previous run.
+    Axis get direction => _direction;
+    Axis _direction = Axis.horizontal;
 
-  set direction(Axis value) {
+    set direction(Axis value) {
     if (_direction == value) return;
     _direction = value;
     markNeedsLayout();
-  }
+    }
 
-  /// How the runs themselves should be placed in the cross axis.
-  ///
-  /// For example, if [runAlignment] is [MainAxisAlignment.center], the runs are
-  /// grouped together in the center of the overall [RenderWrap] in the cross
-  /// axis.
-  ///
-  /// Defaults to [MainAxisAlignment.start].
-  ///
-  MainAxisAlignment get runAlignment => _runAlignment;
-  MainAxisAlignment _runAlignment = MainAxisAlignment.start;
+    /// How the runs themselves should be placed in the cross axis.
+    ///
+    /// For example, if [runAlignment] is [MainAxisAlignment.center], the runs are
+    /// grouped together in the center of the overall [RenderWrap] in the cross
+    /// axis.
+    ///
+    /// Defaults to [MainAxisAlignment.start].
+    ///
+    MainAxisAlignment get runAlignment => _runAlignment;
+    MainAxisAlignment _runAlignment = MainAxisAlignment.start;
 
-  set runAlignment(MainAxisAlignment value) {
+    set runAlignment(MainAxisAlignment value) {
     if (_runAlignment == value) return;
     _runAlignment = value;
     markNeedsLayout();
-  }
+    }
 
-  /// If there is additional free space in the overall [RenderWrap] (e.g.,
-  /// The distance by which the child's top edge is inset from the top of the stack.
-  double? top;
+    /// If there is additional free space in the overall [RenderWrap] (e.g.,
+    /// The distance by which the child's top edge is inset from the top of the stack.
+    double? top;
 
-  /// The distance by which the child's right edge is inset from the right of the stack.
-  double? right;
+    /// The distance by which the child's right edge is inset from the right of the stack.
+    double? right;
 
-  /// The distance by which the child's bottom edge is inset from the bottom of the stack.
-  double? bottom;
+    /// The distance by which the child's bottom edge is inset from the bottom of the stack.
+    double? bottom;
 
-  /// The distance by which the child's left edge is inset from the left of the stack.
-  double? left;
+    /// The distance by which the child's left edge is inset from the left of the stack.
+    double? left;
 
-  /// How the children within a run should be aligned relative to each other in
-  /// the cross axis.
-  ///
-  /// For example, if this is set to [CrossAxisAlignment.end], and the
-  /// [direction] is [Axis.horizontal], then the children within each
-  /// run will have their bottom edges aligned to the bottom edge of the run.
-  ///
-  /// Defaults to [CrossAxisAlignment.end].
-  ///
-  CrossAxisAlignment get crossAxisAlignment => _crossAxisAlignment;
-  CrossAxisAlignment _crossAxisAlignment = CrossAxisAlignment.end;
+    /// How the children within a run should be aligned relative to each other in
+    /// the cross axis.
+    ///
+    /// For example, if this is set to [CrossAxisAlignment.end], and the
+    /// [direction] is [Axis.horizontal], then the children within each
+    /// run will have their bottom edges aligned to the bottom edge of the run.
+    ///
+    /// Defaults to [CrossAxisAlignment.end].
+    ///
+    CrossAxisAlignment get crossAxisAlignment => _crossAxisAlignment;
+    CrossAxisAlignment _crossAxisAlignment = CrossAxisAlignment.end;
 
-  set crossAxisAlignment(CrossAxisAlignment value) {
+    set crossAxisAlignment(CrossAxisAlignment value) {
     if (_crossAxisAlignment == value) return;
     _crossAxisAlignment = value;
     markNeedsLayout();
-  }
+    }
 
-  /// Determines the order to lay children out horizontally and how to interpret
-  /// `start` and `end` in the horizontal direction.
-  ///
-  /// If the [direction] is [Axis.horizontal], this controls the order in which
-  /// children are positioned (left-to-right or right-to-left), and the meaning
-  /// of the textAlign style's [TextAlign.start] and
-  /// [TextAlign.end] values.
-  ///
-  /// If the [direction] is [Axis.horizontal], and either the
-  /// textAlign style is either [TextAlign.start] or [TextAlign.end], or
-  /// there's more than one child, then the [textDirection] must not be null.
-  ///
-  /// If the [direction] is [Axis.vertical], this controls the order in
-  /// which runs are positioned, the meaning of the [runAlignment] property's
-  /// [TextAlign.start] and [TextAlign.end] values, as well as the
-  /// [crossAxisAlignment] property's [CrossAxisAlignment.start] and
-  /// [CrossAxisAlignment.end] values.
-  ///
-  /// If the [direction] is [Axis.vertical], and either the
-  /// [runAlignment] is either [MainAxisAlignment.start] or [MainAxisAlignment.end], the
-  /// [crossAxisAlignment] is either [CrossAxisAlignment.start] or
-  /// [CrossAxisAlignment.end], or there's more than one child, then the
-  /// [textDirection] must not be null.
-  TextDirection get textDirection => _textDirection;
-  TextDirection _textDirection = TextDirection.ltr;
+    /// Determines the order to lay children out horizontally and how to interpret
+    /// `start` and `end` in the horizontal direction.
+    ///
+    /// If the [direction] is [Axis.horizontal], this controls the order in which
+    /// children are positioned (left-to-right or right-to-left), and the meaning
+    /// of the textAlign style's [TextAlign.start] and
+    /// [TextAlign.end] values.
+    ///
+    /// If the [direction] is [Axis.horizontal], and either the
+    /// textAlign style is either [TextAlign.start] or [TextAlign.end], or
+    /// there's more than one child, then the [textDirection] must not be null.
+    ///
+    /// If the [direction] is [Axis.vertical], this controls the order in
+    /// which runs are positioned, the meaning of the [runAlignment] property's
+    /// [TextAlign.start] and [TextAlign.end] values, as well as the
+    /// [crossAxisAlignment] property's [CrossAxisAlignment.start] and
+    /// [CrossAxisAlignment.end] values.
+    ///
+    /// If the [direction] is [Axis.vertical], and either the
+    /// [runAlignment] is either [MainAxisAlignment.start] or [MainAxisAlignment.end], the
+    /// [crossAxisAlignment] is either [CrossAxisAlignment.start] or
+    /// [CrossAxisAlignment.end], or there's more than one child, then the
+    /// [textDirection] must not be null.
+    TextDirection get textDirection => _textDirection;
+    TextDirection _textDirection = TextDirection.ltr;
 
-  set textDirection(TextDirection value) {
+    set textDirection(TextDirection value) {
     if (_textDirection != value) {
-      _textDirection = value;
+    _textDirection = value;
       markNeedsLayout();
     }
   }

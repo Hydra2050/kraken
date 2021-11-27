@@ -9,7 +9,7 @@ import 'dart:ffi';
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:flutter/widgets.dart' show RenderObjectElement;
+import 'package:flutter/widgets.dart' show RenderObjectElement, Widget;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:kraken/bridge.dart';
@@ -18,6 +18,7 @@ import 'package:kraken/foundation.dart';
 import 'package:kraken/gesture.dart';
 import 'package:kraken/module.dart';
 import 'package:kraken/rendering.dart';
+import 'package:kraken/src/new_render/container_widget.dart';
 import 'package:kraken/widget.dart';
 
 

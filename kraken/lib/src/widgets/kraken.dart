@@ -19,6 +19,7 @@ import 'package:kraken/gesture.dart';
 import 'package:kraken/css.dart';
 import 'package:kraken/src/dom/element_registry.dart';
 import 'package:kraken/src/dom/element_manager.dart';
+import 'package:kraken/src/new_render/register_center.dart';
 
 /// Get context of current widget.
 typedef GetContext = BuildContext Function();
@@ -248,6 +249,11 @@ class _KrakenState extends State<Kraken> {
   }
 
   @override
+  void didUpdateWidget(covariant Kraken oldWidget) {
+    // TODO: implement didUpdateWidget
+    super.didUpdateWidget(oldWidget);
+  }
+  @override
   Widget build(BuildContext context) {
     return RepaintBoundary(
         child: FocusableActionDetector(
@@ -255,6 +261,7 @@ class _KrakenState extends State<Kraken> {
             focusNode: _focusNode,
             onFocusChange: _handleFocusChange,
             child: _KrakenRenderObjectWidget(
+              RegisterCenter.sharedInstance().rootWidget ?? Container(),
               context.widget as Kraken,
               widgetDelegate,
             )
@@ -763,12 +770,13 @@ class _KrakenState extends State<Kraken> {
 class _KrakenRenderObjectWidget extends SingleChildRenderObjectWidget {
   /// Creates a widget that visually hides its child.
   const _KrakenRenderObjectWidget(
+      Widget? child,
       Kraken widget,
       WidgetDelegate widgetDelegate,
       {Key? key}
       ) : _krakenWidget = widget,
         _widgetDelegate = widgetDelegate,
-        super(key: key);
+        super(key: key, child: child);
 
   final Kraken _krakenWidget;
   final WidgetDelegate _widgetDelegate;
@@ -815,7 +823,14 @@ This situation often happened when you trying creating kraken when FlutterView n
     // FIXME: reset href when dart hot reload that href is prev href
     controller.href = '';
 
-    return controller.view.getRootRenderObject();
+    // return controller.view.getRootRenderObject();
+    RenderViewportBox viewport = RenderViewportBox(
+        background: _krakenWidget.background,
+        viewportSize: Size(viewportWidth, viewportHeight),
+        gestureListener: _krakenWidget.gestureListener,
+        controller: controller
+    );
+    return viewport;
   }
 
   @override
@@ -885,12 +900,12 @@ class _KrakenRenderObjectElement extends SingleChildRenderObjectElement {
   }
 
   // RenderObjects created by kraken are manager by kraken itself. There are no needs to operate renderObjects on _KrakenRenderObjectElement.
-  @override
-  void insertRenderObjectChild(RenderObject child, Object? slot) {}
-  @override
-  void moveRenderObjectChild(RenderObject child, Object? oldSlot, Object? newSlot) {}
-  @override
-  void removeRenderObjectChild(RenderObject child, Object? slot) {}
+  // @override
+  // void insertRenderObjectChild(RenderObject child, Object? slot) {}
+  // @override
+  // void moveRenderObjectChild(RenderObject child, Object? oldSlot, Object? newSlot) {}
+  // @override
+  // void removeRenderObjectChild(RenderObject child, Object? slot) {}
 
   @override
   _KrakenRenderObjectWidget get widget => super.widget as _KrakenRenderObjectWidget;
