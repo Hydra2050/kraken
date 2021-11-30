@@ -116,6 +116,8 @@ class _CustomStatefulElement extends StatefulElement implements DomApi{
     // TODO: implement appendChild
     if ((widget as _CustomWidget).domElement.delegate != null) {
       (widget as _CustomWidget).domElement.delegate!.appendChild(nodeBase);
+    } else {
+      markNeedsBuild();
     }
   }
 
@@ -123,6 +125,8 @@ class _CustomStatefulElement extends StatefulElement implements DomApi{
   void removeChild(dom.Node? nodeBase) {
     if ((widget as _CustomWidget).domElement.delegate != null) {
       (widget as _CustomWidget).domElement.delegate!.removeChild(nodeBase);
+    } else {
+      markNeedsBuild();
     }
   }
 
@@ -131,6 +135,8 @@ class _CustomStatefulElement extends StatefulElement implements DomApi{
     // TODO: implement updateStyle
     if ((widget as _CustomWidget).domElement.delegate != null) {
       (widget as _CustomWidget).domElement.delegate!.updateStyle();
+    } else {
+      markNeedsBuild();
     }
   }
 

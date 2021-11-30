@@ -582,7 +582,7 @@ void flushUICommand() {
     Widget w = convertToWidget(
         controller.view.elementManager.document.childNodes[0].childNodes[1]);
     if (w is CssBaseMultiWidget && w.children.isNotEmpty) {
-      RegisterCenter.sharedInstance().rootWidget = w;
+      RegisterCenter.sharedInstance().rootWidget = w.children[0];
     }
     // RegisterCenter.sharedInstance().rootWidget = w;
 

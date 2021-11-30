@@ -1,35 +1,21 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/rendering.dart';
 import 'package:kraken/src/new_render/register_center.dart';
-import 'package:vector_math/vector_math.dart';
 
 import '../../dom.dart' as dom;
 
-class CssBaseWidget extends RenderObjectWidget {
-  const CssBaseWidget({Key? key, required this.nodeData}) : super(key: key);
+mixin CssBaseWidget {
+  late dom.Node nodeData;
 
-  final dom.Node nodeData;
-  @override
-  RenderObjectElement createElement() {
-    // TODO: implement createElement
-    throw UnimplementedError();
-  }
-
-  @override
-  RenderObject createRenderObject(BuildContext context) {
-    // TODO: implement createRenderObject
-    throw UnimplementedError();
-  }
 }
 
-class CssBaseRenderObjectElement extends RenderObjectElement {
-  CssBaseRenderObjectElement(RenderObjectWidget widget) : super(widget);
-}
+class CssBaseLeafWidget extends LeafRenderObjectWidget implements CssBaseWidget {
+  CssBaseLeafWidget({Key? key, required this.nodeData})
+      : super(key: key) {
 
-class CssBaseLeafWidget extends CssBaseWidget {
-  CssBaseLeafWidget({Key? key, required dom.Node nodeData})
-      : super(key: key, nodeData: nodeData);
+  }
 
+  // final dom.Node nodeData;
   @override
   CssBaseLeafElement createElement() {
     return CssBaseLeafElement(this);
@@ -37,12 +23,14 @@ class CssBaseLeafWidget extends CssBaseWidget {
 
   @override
   RenderObject createRenderObject(BuildContext context) {
-    // TODO: implement createRenderObject
     return nodeData.createRenderer();
   }
+
+  @override
+  dom.Node nodeData;
 }
 
-class CssBaseLeafElement extends CssBaseRenderObjectElement implements DomApi {
+class CssBaseLeafElement extends LeafRenderObjectElement implements DomApi {
   CssBaseLeafElement(CssBaseLeafWidget widget) : super(widget);
 
   @override
@@ -65,11 +53,10 @@ class CssBaseLeafElement extends CssBaseRenderObjectElement implements DomApi {
 CssBaseSingle
 * */
 
-class CssBaseSingleWidget extends CssBaseWidget {
-  CssBaseSingleWidget({Key? key, this.child, required dom.Node nodeData})
-      : super(key: key, nodeData: nodeData);
+class CssBaseSingleWidget extends SingleChildRenderObjectWidget implements CssBaseWidget {
+  CssBaseSingleWidget({Key? key, Widget? child, required this.nodeData})
+      : super(key: key, child: child);
 
-  final Widget? child;
 
   @override
   CssBaseSingleElement createElement() {
@@ -78,20 +65,24 @@ class CssBaseSingleWidget extends CssBaseWidget {
 
   @override
   RenderObject createRenderObject(BuildContext context) {
-    return nodeData.createRenderer();
+    // return nodeData.createRenderer();
+    return RenderFlex(textDirection: TextDirection.ltr);
   }
+
+  @override
+  dom.Node nodeData;
 }
 
-class CssBaseSingleElement extends CssBaseRenderObjectElement
+class CssBaseSingleElement extends SingleChildRenderObjectElement
     implements DomApi {
   CssBaseSingleElement(CssBaseSingleWidget widget) : super(widget);
 
+  @override
   void mount(Element? parent, Object? newSlot) {
     // TODO: implement mount
     super.mount(parent, newSlot);
     (widget as CssBaseWidget).nodeData.flutterElement = this;
     (widget as CssBaseWidget).nodeData.didMount();
-    RegisterCenter.sharedInstance().testElement = this;
   }
 
   @override
@@ -114,26 +105,31 @@ class CssBaseSingleElement extends CssBaseRenderObjectElement
 CssBaseMultiWidget
 * */
 
-class CssBaseMultiWidget extends CssBaseWidget {
+class CssBaseMultiWidget extends MultiChildRenderObjectWidget implements CssBaseWidget {
   CssBaseMultiWidget(
-      {Key? key, required this.children, required dom.Node nodeData})
-      : super(key: key, nodeData: nodeData);
+      {Key? key, List<Widget>? children, required this.nodeData})
+      : super(key: key, children: children ?? <Widget>[]);
 
-  final List<Widget> children;
 
   @override
   RenderObject createRenderObject(BuildContext context) {
-    return nodeData.createRenderer();
+    // return nodeData.createRenderer();
+    return RenderFlex(textDirection: TextDirection.ltr);
   }
 
   @override
   CssBaseMultiElement createElement() {
     return CssBaseMultiElement(this);
   }
+
+  @override
+  dom.Node nodeData;
 }
 
-class CssBaseMultiElement extends CssBaseRenderObjectElement implements DomApi {
+class CssBaseMultiElement extends MultiChildRenderObjectElement implements DomApi {
   CssBaseMultiElement(CssBaseMultiWidget widget) : super(widget);
+
+  late Element _childElement;
 
   void mount(Element? parent, Object? newSlot) {
     // TODO: implement mount
@@ -145,12 +141,18 @@ class CssBaseMultiElement extends CssBaseRenderObjectElement implements DomApi {
 
   @override
   void appendChild(dom.Node nodeBase) {
-    // TODO: implement appendChild
+    Widget child = CssBaseLeafWidget(nodeData: nodeBase,);
+    // widget.children.length;
+    _childElement = inflateWidget(child, IndexedSlot<Element?>(widget.children.length, children.last));
+    // _childElement = inflateWidget(child, IndexedSlot<Element?>(0, null));
+    // childElement.mount(this, null);
+    // markNeedsBuild();
+
   }
 
   @override
   void removeChild(dom.Node? nodeBase) {
-    // TODO: implement removeChild
+    deactivateChild(_childElement);
   }
 
   @override
