@@ -7,4 +7,8 @@ p.appendChild(text1);
 //p.appendChild(br);
 p.appendChild(text2);
 
+p.onclick = function() {
+  p.style.color = 'red';
+}
+
 document.body.appendChild(p);

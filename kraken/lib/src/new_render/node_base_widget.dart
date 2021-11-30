@@ -84,10 +84,17 @@ class NodeBaseElement extends MultiChildRenderObjectElement implements DomApi {
     (widget as NodePWidget).nodeData.didUnMount();
   }
 
+  @override
+  void updateStyle() {
+
+
+  }
+
 }
 
 
 mixin DomApi {
   void appendChild(dom.Node nodeBase);
   void removeChild(dom.Node? nodeBase);
+  void updateStyle();
 }

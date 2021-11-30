@@ -5,6 +5,9 @@ import 'package:kraken/css.dart';
 import 'package:kraken/dom.dart' as dom;
 import 'package:kraken/kraken.dart';
 import 'package:kraken/rendering.dart';
+import 'package:kraken/src/new_render/utils.dart';
+
+typedef WidgetElementBuilder = Widget Function(BuildContext context, Map<String, dynamic> properties, List<Widget>? children);
 
 const Map<String, dynamic> _defaultStyle = {
   DISPLAY: INLINE_BLOCK,
@@ -27,7 +30,12 @@ abstract class WidgetElement extends dom.Element {
 
   DomApiDelegate? delegate;
 
-  Widget build(BuildContext context, Map<String, dynamic> properties);
+
+  Widget build(BuildContext context, Map<String, dynamic> properties, List<Widget>? children);
+
+  Widget convertWidget() {
+    return _CustomWidget(domElement: this, builder: build,);
+  }
 
   @override
   void didAttachRenderer() {
@@ -64,4 +72,68 @@ abstract class WidgetElement extends dom.Element {
 
 }
 
+
+class _CustomWidget extends StatefulWidget {
+  const _CustomWidget({Key? key, required this.domElement,required this.builder}) : super(key: key);
+
+  final WidgetElement domElement;
+  final WidgetElementBuilder builder;
+  @override
+  _CustomWidgetState createState() => _CustomWidgetState();
+
+  @override
+  _CustomStatefulElement createElement() => _CustomStatefulElement(this);
+}
+
+class _CustomWidgetState extends State<_CustomWidget> {
+  @override
+  Widget build(BuildContext context) {
+    List<Widget> children = <Widget>[];
+    for (dom.Element item in widget.domElement.children) {
+      children.add(Utils.convertToWidget(item));
+    }
+    return widget.builder(context, widget.domElement.properties, children);
+  }
+}
+
+class _CustomStatefulElement extends StatefulElement implements DomApi{
+  _CustomStatefulElement(_CustomWidget widget) : super(widget);
+
+  @override
+  void mount(Element? parent, Object? newSlot) {
+    // TODO: implement mount
+    super.mount(parent, newSlot);
+    (widget as _CustomWidget).domElement.flutterElement = this;
+  }
+
+  @override
+  void unmount() {
+    (widget as _CustomWidget).domElement.flutterElement = null;
+    super.unmount();
+  }
+  @override
+  void appendChild(dom.Node nodeBase) {
+    // TODO: implement appendChild
+    if ((widget as _CustomWidget).domElement.delegate != null) {
+      (widget as _CustomWidget).domElement.delegate!.appendChild(nodeBase);
+    }
+  }
+
+  @override
+  void removeChild(dom.Node? nodeBase) {
+    if ((widget as _CustomWidget).domElement.delegate != null) {
+      (widget as _CustomWidget).domElement.delegate!.removeChild(nodeBase);
+    }
+  }
+
+  @override
+  void updateStyle() {
+    // TODO: implement updateStyle
+    if ((widget as _CustomWidget).domElement.delegate != null) {
+      (widget as _CustomWidget).domElement.delegate!.updateStyle();
+    }
+  }
+
+
+}
 
