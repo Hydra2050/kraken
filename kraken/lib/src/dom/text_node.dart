@@ -18,7 +18,8 @@ const String RETURN_CHAR = '\r';
 const String TAB_CHAR = '\t';
 
 class TextNode extends Node {
-  TextNode(int targetId, Pointer<NativeEventTarget> nativeEventTarget, this._data, ElementManager elementManager)
+  TextNode(int targetId, Pointer<NativeEventTarget> nativeEventTarget,
+      this._data, ElementManager elementManager)
       : super(NodeType.TEXT_NODE, targetId, nativeEventTarget, elementManager);
 
   // Must be existed after text node is attached, and all text update will after text attached.
@@ -32,7 +33,8 @@ class TextNode extends Node {
 
     if (_d == null || _d.isEmpty) return '';
 
-    WhiteSpace whiteSpace = CSSText.resolveWhiteSpace(parentElement?.style[WHITE_SPACE]?? ' ');
+    WhiteSpace whiteSpace =
+        CSSText.resolveWhiteSpace(parentElement?.style[WHITE_SPACE] ?? ' ');
 
     /// https://drafts.csswg.org/css-text-3/#propdef-white-space
     /// The following table summarizes the behavior of the various white-space values:
@@ -101,12 +103,16 @@ class TextNode extends Node {
       _renderTextBox!.renderStyle = _parentElement.renderStyle;
       _renderTextBox!.data = data;
 
-      KrakenRenderParagraph renderParagraph = _renderTextBox!.child as KrakenRenderParagraph;
+      KrakenRenderParagraph renderParagraph =
+          _renderTextBox!.child as KrakenRenderParagraph;
       renderParagraph.markNeedsLayout();
 
-      RenderLayoutBox parentRenderLayoutBox = _parentElement.renderBoxModel as RenderLayoutBox;
-      parentRenderLayoutBox = parentRenderLayoutBox.renderScrollingContent ?? parentRenderLayoutBox;
-      _setTextSizeType(parentRenderLayoutBox.widthSizeType, parentRenderLayoutBox.heightSizeType);
+      RenderLayoutBox parentRenderLayoutBox =
+          _parentElement.renderBoxModel as RenderLayoutBox;
+      parentRenderLayoutBox =
+          parentRenderLayoutBox.renderScrollingContent ?? parentRenderLayoutBox;
+      _setTextSizeType(parentRenderLayoutBox.widthSizeType,
+          parentRenderLayoutBox.heightSizeType);
     }
   }
 
@@ -118,7 +124,7 @@ class TextNode extends Node {
 
   // Attach renderObject of current node to parent
   @override
-  void attachTo(Element parent, { RenderBox? after }) {
+  void attachTo(Element parent, {RenderBox? after}) {
     // Empty string of TextNode should not attach to render tree.
     if (_data == null || _data!.isEmpty) return;
 
@@ -136,7 +142,8 @@ class TextNode extends Node {
   void detach() {
     if (isRendererAttached) {
       RenderTextBox renderTextBox = _renderTextBox!;
-      ContainerRenderObjectMixin parent = renderTextBox.parent as ContainerRenderObjectMixin;
+      ContainerRenderObjectMixin parent =
+          renderTextBox.parent as ContainerRenderObjectMixin;
       parent.remove(renderTextBox);
     }
   }
@@ -153,7 +160,14 @@ class TextNode extends Node {
     if (_renderTextBox != null) {
       return _renderTextBox!;
     }
-    return _renderTextBox = RenderTextBox(data, renderStyle: parentElement?.renderStyle ?? RenderStyle(target: ((RegisterCenter.sharedInstance()!.testElement as NodeBaseElement).widget as NodePWidget).nodeData as Element));
+    // return _renderTextBox = RenderTextBox(data, renderStyle: parentElement?.renderStyle ?? RenderStyle(target: ((RegisterCenter.sharedInstance()!.testElement as NodeBaseElement).widget as NodePWidget).nodeData as Element));
+    return _renderTextBox = RenderTextBox(data,
+        renderStyle: parentElement?.renderStyle ??
+            RenderStyle(
+                target: (RegisterCenter.sharedInstance()!.rootWidget
+                        as CssBaseWidget)
+                    .nodeData as Element));
+
   }
 
   @override

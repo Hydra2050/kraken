@@ -11,14 +11,14 @@ class Utils {
     }
     Widget result;
     if (node is TextNode) {
-      result = NodeBaseSingleWidget(nodeData: node,);
+      result = CssBaseLeafWidget(
+        nodeData: node,
+      );
     } else if (node is CustomWidgetElement) {
       result = node.convertWidget();
     } else {
-      result = NodePWidget(nodeData: node, children: children,);
+      result = CssBaseMultiWidget(nodeData: node, children: children);
     }
     return result;
-
-
   }
 }
