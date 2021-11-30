@@ -140,6 +140,16 @@ class _CustomStatefulElement extends StatefulElement implements DomApi{
     }
   }
 
+  @override
+  void insertChild(dom.Node nodeBase, Object? slot) {
+    // TODO: implement insertChild
+  }
+
+  @override
+  void moveChild(dom.Node nodeBase, Object? oldSlot, Object? newSlot) {
+    // TODO: implement moveChild
+  }
+
 
 }
 

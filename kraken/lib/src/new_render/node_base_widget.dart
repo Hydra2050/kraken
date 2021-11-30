@@ -6,16 +6,12 @@ import '../../dom.dart' as dom;
 
 mixin CssBaseWidget {
   late dom.Node nodeData;
-
 }
 
 class CssBaseLeafWidget extends LeafRenderObjectWidget implements CssBaseWidget {
   CssBaseLeafWidget({Key? key, required this.nodeData})
       : super(key: key) {
-
   }
-
-  // final dom.Node nodeData;
   @override
   CssBaseLeafElement createElement() {
     return CssBaseLeafElement(this);
@@ -46,6 +42,16 @@ class CssBaseLeafElement extends LeafRenderObjectElement implements DomApi {
   @override
   void updateStyle() {
     // TODO: implement updateStyle
+  }
+
+  @override
+  void insertChild(dom.Node nodeBase, Object? slot) {
+    // TODO: implement insertChild
+  }
+
+  @override
+  void moveChild(dom.Node nodeBase, Object? oldSlot, Object? newSlot) {
+    // TODO: implement moveChild
   }
 }
 
@@ -86,18 +92,28 @@ class CssBaseSingleElement extends SingleChildRenderObjectElement
   }
 
   @override
+  void updateStyle() {
+    // TODO: implement updateStyle
+  }
+
+  @override
   void appendChild(dom.Node nodeBase) {
     // TODO: implement appendChild
   }
 
   @override
-  void removeChild(dom.Node? nodeBase) {
-    // TODO: implement removeChild
+  void insertChild(dom.Node nodeBase, Object? slot) {
+    // TODO: implement insertChild
   }
 
   @override
-  void updateStyle() {
-    // TODO: implement updateStyle
+  void moveChild(dom.Node nodeBase, Object? oldSlot, Object? newSlot) {
+    // TODO: implement moveChild
+  }
+
+  @override
+  void removeChild(dom.Node? nodeBase) {
+    // TODO: implement removeChild
   }
 }
 
@@ -155,14 +171,30 @@ class CssBaseMultiElement extends MultiChildRenderObjectElement implements DomAp
     deactivateChild(_childElement);
   }
 
-  @override
   void updateStyle() {
     // TODO: implement updateStyle
   }
+
+  @override
+  void insertChild(dom.Node nodeBase, Object? slot) {
+    // TODO: implement insertChild
+  }
+
+  @override
+  void moveChild(dom.Node nodeBase, Object? oldSlot, Object? newSlot) {
+    // TODO: implement moveChild
+  }
+
 }
 
+/*
+DomApi
+ */
+
 mixin DomApi {
-  void appendChild(dom.Node nodeBase);
-  void removeChild(dom.Node? nodeBase);
   void updateStyle();
+  void appendChild(dom.Node nodeBase);
+  void insertChild(dom.Node nodeBase, Object? slot);
+  void moveChild(dom.Node nodeBase, Object? oldSlot, Object? newSlot);
+  void removeChild(dom.Node? nodeBase);
 }
