@@ -5,14 +5,61 @@ import 'package:vector_math/vector_math.dart';
 
 import '../../dom.dart' as dom;
 
-class NodeBaseSingleWidget extends SingleChildRenderObjectWidget {
-  NodeBaseSingleWidget({
-    Key? key,
-    Widget? child,
-    required this.nodeData,
-  }): super(key: key, child: child);
+class CssBaseWidget extends RenderObjectWidget {
+  const CssBaseWidget({Key? key, required this.nodeData}) : super(key: key);
 
   final dom.Node nodeData;
+  @override
+  RenderObjectElement createElement() {
+    // TODO: implement createElement
+    throw UnimplementedError();
+  }
+
+  @override
+  RenderObject createRenderObject(BuildContext context) {
+    // TODO: implement createRenderObject
+    throw UnimplementedError();
+  }
+}
+
+class CssBaseRenderObjectElement extends RenderObjectElement {
+  CssBaseRenderObjectElement(RenderObjectWidget widget) : super(widget);
+}
+
+class CssBaseLeafWidget extends CssBaseWidget {
+  CssBaseLeafWidget({Key? key, required dom.Node nodeData})
+      : super(key: key, nodeData: nodeData);
+
+  @override
+  CssBaseLeafElement createElement() {
+    return CssBaseLeafElement(this);
+  }
+
+  @override
+  RenderObject createRenderObject(BuildContext context) {
+    // TODO: implement createRenderObject
+    return nodeData.createRenderer();
+  }
+}
+
+class CssBaseLeafElement extends CssBaseRenderObjectElement {
+  CssBaseLeafElement(CssBaseLeafWidget widget) : super(widget);
+}
+
+/*
+CssBaseSingle
+* */
+
+class CssBaseSingleWidget extends CssBaseWidget {
+  CssBaseSingleWidget({Key? key, this.child, required dom.Node nodeData})
+      : super(key: key, nodeData: nodeData);
+
+  final Widget? child;
+
+  @override
+  CssBaseSingleElement createElement() {
+    return CssBaseSingleElement(this);
+  }
 
   @override
   RenderObject createRenderObject(BuildContext context) {
@@ -20,55 +67,35 @@ class NodeBaseSingleWidget extends SingleChildRenderObjectWidget {
   }
 }
 
-class NodePWidget extends MultiChildRenderObjectWidget {
-  NodePWidget({
-    Key? key,
-    List<Widget>? children,
-    required this.nodeData,
-  }): super(key:key, children: children ?? <Widget>[]);
-  final dom.Node nodeData;
+class CssBaseSingleElement extends CssBaseRenderObjectElement {
+  CssBaseSingleElement(CssBaseSingleWidget widget) : super(widget);
+}
+
+/*
+CssBaseMultiWidget
+* */
+
+class CssBaseMultiWidget extends CssBaseWidget {
+  CssBaseMultiWidget(
+      {Key? key, required this.children, required dom.Node nodeData})
+      : super(key: key, nodeData: nodeData);
+
+  final List<Widget> children;
 
   @override
   RenderObject createRenderObject(BuildContext context) {
-    return RenderFlex(textDirection: TextDirection.ltr);
+    return nodeData.createRenderer();
   }
-
 
   @override
-  MultiChildRenderObjectElement createElement() {
-    return NodeBaseElement(this);
+  CssBaseMultiElement createElement() {
+    return CssBaseMultiElement(this);
   }
-
 }
 
-class NodeBaseElement extends MultiChildRenderObjectElement implements DomApi {
-  NodeBaseElement(NodePWidget widget) : super(widget);
-
-  late Element _childElement;
-  @override
-  void mount(Element? parent, Object? newSlot) {
-    // TODO: implement mount
-    super.mount(parent, newSlot);
-    RegisterCenter.sharedInstance().testElement = this;
-  }
-
-  @override
-  void appendChild(dom.Node nodeBase) {
-    Widget child = NodeBaseSingleWidget(nodeData: nodeBase,);
-    // widget.children.length;
-    _childElement = inflateWidget(child, IndexedSlot<Element?>(widget.children.length, children.last));
-    // _childElement = inflateWidget(child, IndexedSlot<Element?>(0, null));
-    // childElement.mount(this, null);
-    // markNeedsBuild();
-  }
-
-  @override
-  void removeChild(dom.Node? nodeBase) {
-    deactivateChild(_childElement);
-  }
-
+class CssBaseMultiElement extends CssBaseRenderObjectElement {
+  CssBaseMultiElement(CssBaseMultiWidget widget) : super(widget);
 }
-
 
 mixin DomApi {
   void appendChild(dom.Node nodeBase);

@@ -18,8 +18,10 @@ enum NodeType {
 }
 
 class Comment extends Node {
-  Comment(int targetId, Pointer<NativeEventTarget> nativeEventTarget, ElementManager elementManager)
-      : super(NodeType.COMMENT_NODE, targetId, nativeEventTarget, elementManager);
+  Comment(int targetId, Pointer<NativeEventTarget> nativeEventTarget,
+      ElementManager elementManager)
+      : super(
+            NodeType.COMMENT_NODE, targetId, nativeEventTarget, elementManager);
 
   @override
   String get nodeName => '#comment';
@@ -37,7 +39,8 @@ class Comment extends Node {
 /// [Node] or [Element]s, which wrap [RenderObject]s, which provide the actual
 /// rendering of the application.
 abstract class RenderObjectNode {
-  RenderBox? get renderer => throw FlutterError('This node has no render object implemented.');
+  RenderBox? get renderer =>
+      throw FlutterError('This node has no render object implemented.');
 
   /// Creates an instance of the [RenderObject] class that this
   /// [RenderObjectNode] represents, using the configuration described by this
@@ -88,8 +91,10 @@ abstract class LifecycleCallbacks {
 // void attributeChangedCallback();
 }
 
-abstract class Node extends EventTarget implements RenderObjectNode, LifecycleCallbacks {
+abstract class Node extends EventTarget
+    implements RenderObjectNode, LifecycleCallbacks {
   List<Node> childNodes = [];
+
   /// The Node.parentNode read-only property returns the parent of the specified node in the DOM tree.
   Node? parentNode;
   NodeType nodeType;
@@ -112,7 +117,11 @@ abstract class Node extends EventTarget implements RenderObjectNode, LifecycleCa
     return _children;
   }
 
-  Node(this.nodeType, int targetId, Pointer<NativeEventTarget> nativeEventTarget, ElementManager elementManager)
+  Node(
+      this.nodeType,
+      int targetId,
+      Pointer<NativeEventTarget> nativeEventTarget,
+      ElementManager elementManager)
       : super(targetId, nativeEventTarget, elementManager);
 
   // If node is on the tree, the root parent is body.
@@ -142,6 +151,7 @@ abstract class Node extends EventTarget implements RenderObjectNode, LifecycleCa
     if (index + 1 > parentNode!.childNodes.length - 1) return null;
     return parentNode!.childNodes[index + 1];
   }
+
   // Is child renderObject attached.
   bool get isRendererAttached => renderer != null && renderer!.attached;
 
@@ -157,14 +167,15 @@ abstract class Node extends EventTarget implements RenderObjectNode, LifecycleCa
     super.dispose();
 
     parentNode = null;
-    for (int i = 0; i < childNodes.length; i ++) {
+    for (int i = 0; i < childNodes.length; i++) {
       childNodes[i].parentNode = null;
     }
     childNodes.clear();
   }
 
   @override
-  RenderBox createRenderer() => throw FlutterError('[createRenderer] is not implemented.');
+  RenderBox createRenderer() =>
+      throw FlutterError('[createRenderer] is not implemented.');
 
   @override
   void willAttachRenderer() {}
@@ -254,7 +265,7 @@ abstract class Node extends EventTarget implements RenderObjectNode, LifecycleCa
   }
 
   /// Ensure child and child's child render object is attached.
-  void ensureChildAttached() { }
+  void ensureChildAttached() {}
 
   @override
   void connectedCallback() {
