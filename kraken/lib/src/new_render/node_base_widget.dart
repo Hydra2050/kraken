@@ -20,11 +20,29 @@ class CssBaseWidget extends RenderObjectWidget {
     // TODO: implement createRenderObject
     throw UnimplementedError();
   }
+
+  @override
+  void updateRenderObject(
+      BuildContext context, covariant RenderObject renderObject) {
+    super.updateRenderObject(context, renderObject);
+  }
+
+  /// A render object previously associated with this widget has been removed
+  /// from the tree. The given [RenderObject] will be of the same type as
+  /// returned by this object's [createRenderObject].
+  @override
+  void didUnmountRenderObject(covariant RenderObject renderObject) {
+    super.didUnmountRenderObject(renderObject);
+  }
 }
 
 class CssBaseRenderObjectElement extends RenderObjectElement {
   CssBaseRenderObjectElement(RenderObjectWidget widget) : super(widget);
 }
+
+/*
+CssBaseLeafWidget
+* */
 
 class CssBaseLeafWidget extends CssBaseWidget {
   CssBaseLeafWidget({Key? key, required dom.Node nodeData})
@@ -56,7 +74,7 @@ class CssBaseLeafElement extends CssBaseRenderObjectElement implements DomApi {
   }
 
   @override
-  void updateStyle() {
+  void updateStyle(dom.Node? nodeBase) {
     // TODO: implement updateStyle
   }
 }
@@ -83,9 +101,10 @@ class CssBaseSingleWidget extends CssBaseWidget {
 }
 
 class CssBaseSingleElement extends CssBaseRenderObjectElement
-    implements DomApi {
+    implements DomSingleChildApi {
   CssBaseSingleElement(CssBaseSingleWidget widget) : super(widget);
 
+  @override
   void mount(Element? parent, Object? newSlot) {
     // TODO: implement mount
     super.mount(parent, newSlot);
@@ -95,18 +114,28 @@ class CssBaseSingleElement extends CssBaseRenderObjectElement
   }
 
   @override
+  void updateStyle(dom.Node? nodeBase) {
+    // TODO: implement updateStyle
+  }
+
+  @override
   void appendChild(dom.Node nodeBase) {
     // TODO: implement appendChild
   }
 
   @override
-  void removeChild(dom.Node? nodeBase) {
-    // TODO: implement removeChild
+  void insertChild(dom.Node nodeBase, Object? slot) {
+    // TODO: implement insertChild
   }
 
   @override
-  void updateStyle() {
-    // TODO: implement updateStyle
+  void moveChild(dom.Node nodeBase, Object? oldSlot, Object? newSlot) {
+    // TODO: implement moveChild
+  }
+
+  @override
+  void removeChild(dom.Node nodeBase, Object? slot) {
+    // TODO: implement removeChild
   }
 }
 
@@ -132,9 +161,11 @@ class CssBaseMultiWidget extends CssBaseWidget {
   }
 }
 
-class CssBaseMultiElement extends CssBaseRenderObjectElement implements DomApi {
+class CssBaseMultiElement extends CssBaseRenderObjectElement
+    implements DomMultiChildApi {
   CssBaseMultiElement(CssBaseMultiWidget widget) : super(widget);
 
+  @override
   void mount(Element? parent, Object? newSlot) {
     // TODO: implement mount
     super.mount(parent, newSlot);
@@ -144,23 +175,45 @@ class CssBaseMultiElement extends CssBaseRenderObjectElement implements DomApi {
   }
 
   @override
-  void appendChild(dom.Node nodeBase) {
-    // TODO: implement appendChild
-  }
-
-  @override
-  void removeChild(dom.Node? nodeBase) {
-    // TODO: implement removeChild
-  }
-
-  @override
-  void updateStyle() {
+  void updateStyle(dom.Node? nodeBase) {
     // TODO: implement updateStyle
+  }
+
+  @override
+  void insertChild(dom.Node nodeBase, IndexedSlot<Element?> slot) {
+    // TODO: implement insertChild
+  }
+
+  @override
+  void moveChild(dom.Node nodeBase, IndexedSlot<Element?> oldSlot,
+      IndexedSlot<Element?> newSlot) {
+    // TODO: implement moveChild
+  }
+
+  @override
+  void removeChild(dom.Node nodeBase, Object? slot) {
+    // TODO: implement removeChild
   }
 }
 
+/*
+DomApi
+ */
+
 mixin DomApi {
+  void updateStyle(dom.Node? nodeBase);
+}
+
+mixin DomSingleChildApi on DomApi {
   void appendChild(dom.Node nodeBase);
-  void removeChild(dom.Node? nodeBase);
-  void updateStyle();
+  void insertChild(dom.Node nodeBase, Object? slot);
+  void moveChild(dom.Node nodeBase, Object? oldSlot, Object? newSlot);
+  void removeChild(dom.Node nodeBase, Object? slot);
+}
+
+mixin DomMultiChildApi on DomApi {
+  void insertChild(dom.Node nodeBase, IndexedSlot<Element?> slot);
+  void moveChild(dom.Node nodeBase, IndexedSlot<Element?> oldSlot,
+      IndexedSlot<Element?> newSlot);
+  void removeChild(dom.Node nodeBase, Object? slot);
 }
