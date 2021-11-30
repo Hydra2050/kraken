@@ -9,6 +9,8 @@ import 'package:kraken/bridge.dart';
 import 'package:kraken/dom.dart';
 import 'package:meta/meta.dart';
 
+import 'package:flutter/widgets.dart' as _flutter;
+
 enum NodeType {
   ELEMENT_NODE,
   TEXT_NODE,
@@ -18,10 +20,8 @@ enum NodeType {
 }
 
 class Comment extends Node {
-  Comment(int targetId, Pointer<NativeEventTarget> nativeEventTarget,
-      ElementManager elementManager)
-      : super(
-            NodeType.COMMENT_NODE, targetId, nativeEventTarget, elementManager);
+  Comment(int targetId, Pointer<NativeEventTarget> nativeEventTarget, ElementManager elementManager)
+      : super(NodeType.COMMENT_NODE, targetId, nativeEventTarget, elementManager);
 
   @override
   String get nodeName => '#comment';
@@ -39,8 +39,7 @@ class Comment extends Node {
 /// [Node] or [Element]s, which wrap [RenderObject]s, which provide the actual
 /// rendering of the application.
 abstract class RenderObjectNode {
-  RenderBox? get renderer =>
-      throw FlutterError('This node has no render object implemented.');
+  RenderBox? get renderer => throw FlutterError('This node has no render object implemented.');
 
   /// Creates an instance of the [RenderObject] class that this
   /// [RenderObjectNode] represents, using the configuration described by this
@@ -72,6 +71,18 @@ abstract class RenderObjectNode {
   void didDetachRenderer();
 }
 
+abstract class ElementNode {
+  _flutter.Element? flutterElement;
+
+  @protected
+  void didMount();
+  @protected
+  void didUpdate();
+  @protected
+  void didUnMount();
+
+}
+
 /// Lifecycles that triggered when NodeTree changes.
 /// Ref: https://html.spec.whatwg.org/multipage/custom-elements.html#concept-custom-element-definition-lifecycle-callbacks
 abstract class LifecycleCallbacks {
@@ -91,14 +102,15 @@ abstract class LifecycleCallbacks {
 // void attributeChangedCallback();
 }
 
-abstract class Node extends EventTarget
-    implements RenderObjectNode, LifecycleCallbacks {
+abstract class Node extends EventTarget implements RenderObjectNode, LifecycleCallbacks, ElementNode {
   List<Node> childNodes = [];
-
   /// The Node.parentNode read-only property returns the parent of the specified node in the DOM tree.
   Node? parentNode;
   NodeType nodeType;
   String get nodeName;
+
+  @override
+  _flutter.Element? flutterElement;
 
   /// The Node.parentElement read-only property returns the DOM node's parent Element,
   /// or null if the node either has no parent, or its parent isn't a DOM Element.
@@ -117,11 +129,7 @@ abstract class Node extends EventTarget
     return _children;
   }
 
-  Node(
-      this.nodeType,
-      int targetId,
-      Pointer<NativeEventTarget> nativeEventTarget,
-      ElementManager elementManager)
+  Node(this.nodeType, int targetId, Pointer<NativeEventTarget> nativeEventTarget, ElementManager elementManager)
       : super(targetId, nativeEventTarget, elementManager);
 
   // If node is on the tree, the root parent is body.
@@ -151,7 +159,6 @@ abstract class Node extends EventTarget
     if (index + 1 > parentNode!.childNodes.length - 1) return null;
     return parentNode!.childNodes[index + 1];
   }
-
   // Is child renderObject attached.
   bool get isRendererAttached => renderer != null && renderer!.attached;
 
@@ -167,15 +174,14 @@ abstract class Node extends EventTarget
     super.dispose();
 
     parentNode = null;
-    for (int i = 0; i < childNodes.length; i++) {
+    for (int i = 0; i < childNodes.length; i ++) {
       childNodes[i].parentNode = null;
     }
     childNodes.clear();
   }
 
   @override
-  RenderBox createRenderer() =>
-      throw FlutterError('[createRenderer] is not implemented.');
+  RenderBox createRenderer() => throw FlutterError('[createRenderer] is not implemented.');
 
   @override
   void willAttachRenderer() {}
@@ -188,6 +194,15 @@ abstract class Node extends EventTarget
 
   @override
   void didDetachRenderer() {}
+
+  @override
+  void didMount() {}
+
+  @override
+  void didUpdate() {}
+
+  @override
+  void didUnMount() {}
 
   @mustCallSuper
   Node appendChild(Node child) {
@@ -265,7 +280,7 @@ abstract class Node extends EventTarget
   }
 
   /// Ensure child and child's child render object is attached.
-  void ensureChildAttached() {}
+  void ensureChildAttached() { }
 
   @override
   void connectedCallback() {

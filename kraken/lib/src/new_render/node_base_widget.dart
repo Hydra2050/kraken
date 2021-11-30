@@ -42,8 +42,23 @@ class CssBaseLeafWidget extends CssBaseWidget {
   }
 }
 
-class CssBaseLeafElement extends CssBaseRenderObjectElement {
+class CssBaseLeafElement extends CssBaseRenderObjectElement implements DomApi {
   CssBaseLeafElement(CssBaseLeafWidget widget) : super(widget);
+
+  @override
+  void appendChild(dom.Node nodeBase) {
+    // TODO: implement appendChild
+  }
+
+  @override
+  void removeChild(dom.Node? nodeBase) {
+    // TODO: implement removeChild
+  }
+
+  @override
+  void updateStyle() {
+    // TODO: implement updateStyle
+  }
 }
 
 /*
@@ -67,8 +82,32 @@ class CssBaseSingleWidget extends CssBaseWidget {
   }
 }
 
-class CssBaseSingleElement extends CssBaseRenderObjectElement {
+class CssBaseSingleElement extends CssBaseRenderObjectElement
+    implements DomApi {
   CssBaseSingleElement(CssBaseSingleWidget widget) : super(widget);
+
+  void mount(Element? parent, Object? newSlot) {
+    // TODO: implement mount
+    super.mount(parent, newSlot);
+    (widget as CssBaseWidget).nodeData.flutterElement = this;
+    (widget as CssBaseWidget).nodeData.didMount();
+    RegisterCenter.sharedInstance().testElement = this;
+  }
+
+  @override
+  void appendChild(dom.Node nodeBase) {
+    // TODO: implement appendChild
+  }
+
+  @override
+  void removeChild(dom.Node? nodeBase) {
+    // TODO: implement removeChild
+  }
+
+  @override
+  void updateStyle() {
+    // TODO: implement updateStyle
+  }
 }
 
 /*
@@ -93,11 +132,35 @@ class CssBaseMultiWidget extends CssBaseWidget {
   }
 }
 
-class CssBaseMultiElement extends CssBaseRenderObjectElement {
+class CssBaseMultiElement extends CssBaseRenderObjectElement implements DomApi {
   CssBaseMultiElement(CssBaseMultiWidget widget) : super(widget);
+
+  void mount(Element? parent, Object? newSlot) {
+    // TODO: implement mount
+    super.mount(parent, newSlot);
+    (widget as CssBaseWidget).nodeData.flutterElement = this;
+    (widget as CssBaseWidget).nodeData.didMount();
+    RegisterCenter.sharedInstance().testElement = this;
+  }
+
+  @override
+  void appendChild(dom.Node nodeBase) {
+    // TODO: implement appendChild
+  }
+
+  @override
+  void removeChild(dom.Node? nodeBase) {
+    // TODO: implement removeChild
+  }
+
+  @override
+  void updateStyle() {
+    // TODO: implement updateStyle
+  }
 }
 
 mixin DomApi {
   void appendChild(dom.Node nodeBase);
   void removeChild(dom.Node? nodeBase);
+  void updateStyle();
 }

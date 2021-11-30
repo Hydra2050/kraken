@@ -17,6 +17,7 @@ import 'package:kraken/kraken.dart';
 import 'package:kraken/module.dart';
 import 'package:kraken/src/new_render/node_base_widget.dart';
 import 'package:kraken/src/new_render/register_center.dart';
+import 'package:kraken/src/new_render/utils.dart';
 
 import 'from_native.dart';
 import 'native_types.dart';
@@ -604,23 +605,5 @@ Widget convertToWidget(Node node) {
   // }
   // NodeBaseWidget result = NodeBaseWidget(nodeData: node.documentElement, children: children,);
   // return result;
-  return _convert(node);
-}
-
-Widget _convert(Node node) {
-  List<Widget> children = <Widget>[];
-  for (Node item in node.childNodes) {
-    if (item is Element) {
-      children.add(_convert(item));
-    } else if (item is TextNode) {
-      children.add(_convert(item));
-    }
-  }
-  Widget result;
-  if (node is TextNode) {
-    result = CssBaseSingleWidget(nodeData: node);
-  } else {
-    result = CssBaseMultiWidget(nodeData: node, children: children);
-  }
-  return result;
+  return Utils.convertToWidget(node);
 }
