@@ -49,6 +49,8 @@ class NodeBaseElement extends MultiChildRenderObjectElement implements DomApi {
   void mount(Element? parent, Object? newSlot) {
     // TODO: implement mount
     super.mount(parent, newSlot);
+    (widget as NodePWidget).nodeData.flutterElement = this;
+    (widget as NodePWidget).nodeData.didMount();
     RegisterCenter.sharedInstance().testElement = this;
   }
 
@@ -62,9 +64,24 @@ class NodeBaseElement extends MultiChildRenderObjectElement implements DomApi {
     // markNeedsBuild();
   }
 
+
+
   @override
   void removeChild(dom.Node? nodeBase) {
     deactivateChild(_childElement);
+  }
+
+  @override
+  void update(MultiChildRenderObjectWidget newWidget) {
+    super.update(newWidget);
+    (widget as NodePWidget).nodeData.didUpdate();
+  }
+
+  @override
+  void unmount() {
+    (widget as NodePWidget).nodeData.flutterElement = null;
+    super.unmount();
+    (widget as NodePWidget).nodeData.didUnMount();
   }
 
 }

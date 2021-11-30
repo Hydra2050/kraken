@@ -9,6 +9,8 @@ import 'package:kraken/bridge.dart';
 import 'package:kraken/dom.dart';
 import 'package:meta/meta.dart';
 
+import 'package:flutter/widgets.dart' as _flutter;
+
 enum NodeType {
   ELEMENT_NODE,
   TEXT_NODE,
@@ -69,6 +71,18 @@ abstract class RenderObjectNode {
   void didDetachRenderer();
 }
 
+abstract class ElementNode {
+  _flutter.Element? flutterElement;
+
+  @protected
+  void didMount();
+  @protected
+  void didUpdate();
+  @protected
+  void didUnMount();
+
+}
+
 /// Lifecycles that triggered when NodeTree changes.
 /// Ref: https://html.spec.whatwg.org/multipage/custom-elements.html#concept-custom-element-definition-lifecycle-callbacks
 abstract class LifecycleCallbacks {
@@ -88,12 +102,15 @@ abstract class LifecycleCallbacks {
 // void attributeChangedCallback();
 }
 
-abstract class Node extends EventTarget implements RenderObjectNode, LifecycleCallbacks {
+abstract class Node extends EventTarget implements RenderObjectNode, LifecycleCallbacks, ElementNode {
   List<Node> childNodes = [];
   /// The Node.parentNode read-only property returns the parent of the specified node in the DOM tree.
   Node? parentNode;
   NodeType nodeType;
   String get nodeName;
+
+  @override
+  _flutter.Element? flutterElement;
 
   /// The Node.parentElement read-only property returns the DOM node's parent Element,
   /// or null if the node either has no parent, or its parent isn't a DOM Element.
@@ -177,6 +194,15 @@ abstract class Node extends EventTarget implements RenderObjectNode, LifecycleCa
 
   @override
   void didDetachRenderer() {}
+
+  @override
+  void didMount() {}
+
+  @override
+  void didUpdate() {}
+
+  @override
+  void didUnMount() {}
 
   @mustCallSuper
   Node appendChild(Node child) {
