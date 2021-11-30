@@ -153,7 +153,7 @@ class TextNode extends Node {
     if (_renderTextBox != null) {
       return _renderTextBox!;
     }
-    return _renderTextBox = RenderTextBox(data, renderStyle: parentElement?.renderStyle ?? RenderStyle(target: (RegisterCenter.sharedInstance()!.rootWidget as NodePWidget).nodeData as Element));
+    return _renderTextBox = RenderTextBox(data, renderStyle: parentElement?.renderStyle ?? RenderStyle(target: ((RegisterCenter.sharedInstance()!.testElement as NodeBaseElement).widget as NodePWidget).nodeData as Element));
   }
 
   @override

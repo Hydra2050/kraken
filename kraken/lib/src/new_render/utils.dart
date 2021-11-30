@@ -1,20 +1,19 @@
 import 'package:flutter/widgets.dart';
 import 'package:kraken/dom.dart' hide Element;
+import 'package:kraken/src/new_render/custom_widget.dart';
 import 'package:kraken/src/new_render/node_base_widget.dart';
 
 class Utils {
   static Widget convertToWidget(Node node) {
     List<Widget> children = <Widget>[];
     for (Node item in node.childNodes) {
-      if (item is Element) {
-        children.add(convertToWidget(item));
-      } else if (item is TextNode) {
-        children.add(convertToWidget(item));
-      }
+      children.add(convertToWidget(item));
     }
     Widget result;
     if (node is TextNode) {
       result = NodeBaseSingleWidget(nodeData: node,);
+    } else if (node is CustomWidgetElement) {
+      result = node.convertWidget();
     } else {
       result = NodePWidget(nodeData: node, children: children,);
     }

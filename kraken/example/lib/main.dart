@@ -14,10 +14,24 @@ void main() {
     return TextWidgetElement(targetId, nativeEventTarget, elementManager);
   });
   Kraken.defineCustomElement('demo-list', (targetId, nativeEventTarget, elementManager) {
-    return DemoListWidgetElement(targetId, nativeEventTarget, elementManager);
+    // return DemoListWidgetElement(targetId, nativeEventTarget, elementManager);
+    return DemoFlutterList(targetId, nativeEventTarget, elementManager);
   });
   runApp(MyApp());
 }
+
+class DemoFlutterList extends CustomWidgetElement {
+  DemoFlutterList(int targetId, Pointer<NativeEventTarget> nativeEventTarget, ElementManager elementManager, {DomApiDelegate? delegate}) : super(targetId, nativeEventTarget, elementManager, delegate);
+
+  @override
+  Widget build(BuildContext context, Map<String, dynamic> properties, List<Widget> children) {
+    return ListView(
+      children: children,
+    );
+  }
+
+}
+
 
 class TextWidgetElement extends WidgetElement {
   TextWidgetElement(int targetId, Pointer<NativeEventTarget> nativeEventTarget, ElementManager elementManager) :

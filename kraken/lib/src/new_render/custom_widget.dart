@@ -7,7 +7,7 @@ import 'package:kraken/kraken.dart';
 import 'package:kraken/rendering.dart';
 import 'package:kraken/src/new_render/utils.dart';
 
-typedef WidgetElementBuilder = Widget Function(BuildContext context, Map<String, dynamic> properties, List<Widget>? children);
+typedef WidgetElementBuilder = Widget Function(BuildContext context, Map<String, dynamic> properties, List<Widget> children);
 
 const Map<String, dynamic> _defaultStyle = {
   DISPLAY: INLINE_BLOCK,
@@ -17,8 +17,8 @@ abstract class DomApiDelegate implements DomApi{
 
 }
 
-abstract class WidgetElement extends dom.Element {
-  WidgetElement(int targetId, Pointer<NativeEventTarget> nativeEventTarget, dom.ElementManager elementManager, this.delegate)
+abstract class CustomWidgetElement extends dom.Element {
+  CustomWidgetElement(int targetId, Pointer<NativeEventTarget> nativeEventTarget, dom.ElementManager elementManager, this.delegate)
       : super(
       targetId,
       nativeEventTarget,
@@ -31,7 +31,7 @@ abstract class WidgetElement extends dom.Element {
   DomApiDelegate? delegate;
 
 
-  Widget build(BuildContext context, Map<String, dynamic> properties, List<Widget>? children);
+  Widget build(BuildContext context, Map<String, dynamic> properties, List<Widget> children);
 
   Widget convertWidget() {
     return _CustomWidget(domElement: this, builder: build,);
@@ -76,7 +76,7 @@ abstract class WidgetElement extends dom.Element {
 class _CustomWidget extends StatefulWidget {
   const _CustomWidget({Key? key, required this.domElement,required this.builder}) : super(key: key);
 
-  final WidgetElement domElement;
+  final CustomWidgetElement domElement;
   final WidgetElementBuilder builder;
   @override
   _CustomWidgetState createState() => _CustomWidgetState();
@@ -89,7 +89,7 @@ class _CustomWidgetState extends State<_CustomWidget> {
   @override
   Widget build(BuildContext context) {
     List<Widget> children = <Widget>[];
-    for (dom.Element item in widget.domElement.children) {
+    for (dom.Node item in widget.domElement.childNodes) {
       children.add(Utils.convertToWidget(item));
     }
     return widget.builder(context, widget.domElement.properties, children);
