@@ -140,12 +140,12 @@ class TextNode extends Node {
 
   // Detach renderObject of current node from parent
   void detach() {
-    if (isRendererAttached) {
-      RenderTextBox renderTextBox = _renderTextBox!;
-      ContainerRenderObjectMixin parent =
-          renderTextBox.parent as ContainerRenderObjectMixin;
-      parent.remove(renderTextBox);
-    }
+    // if (isRendererAttached) {
+    //   RenderTextBox renderTextBox = _renderTextBox!;
+    //   ContainerRenderObjectMixin parent =
+    //       renderTextBox.parent as ContainerRenderObjectMixin;
+    //   parent.remove(renderTextBox);
+    // }
   }
 
   // Detach renderObject of current node from parent
@@ -157,11 +157,11 @@ class TextNode extends Node {
 
   @override
   RenderBox createRenderer() {
-    if (_renderTextBox != null) {
-      return _renderTextBox!;
-    }
+    // if (_renderTextBox != null) {
+    //   return _renderTextBox!;
+    // }
     // return _renderTextBox = RenderTextBox(data, renderStyle: parentElement?.renderStyle ?? RenderStyle(target: ((RegisterCenter.sharedInstance()!.testElement as NodeBaseElement).widget as NodePWidget).nodeData as Element));
-    return _renderTextBox = RenderTextBox(data,
+    return RenderTextBox(data,
         renderStyle: parentElement?.renderStyle ??
             RenderStyle(
                 target: (RegisterCenter.sharedInstance()!.rootWidget

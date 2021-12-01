@@ -13,7 +13,7 @@ const Map<String, dynamic> _defaultStyle = {
   DISPLAY: INLINE_BLOCK,
 };
 
-abstract class DomApiDelegate implements DomApi{
+abstract class DomApiDelegate implements DomApi {
 
 }
 
@@ -104,6 +104,7 @@ class _CustomStatefulElement extends StatefulElement implements DomApi{
     // TODO: implement mount
     super.mount(parent, newSlot);
     (widget as _CustomWidget).domElement.flutterElement = this;
+    RegisterCenter.sharedInstance().testElement = this;
   }
 
   @override
@@ -113,7 +114,8 @@ class _CustomStatefulElement extends StatefulElement implements DomApi{
   }
   @override
   void appendChild(dom.Node nodeBase) {
-    // TODO: implement appendChild
+    // nodeBase.parentNode = (widget as _CustomWidget).domElement;
+    // (widget as _CustomWidget).domElement.childNodes.add(nodeBase);
     if ((widget as _CustomWidget).domElement.delegate != null) {
       (widget as _CustomWidget).domElement.delegate!.appendChild(nodeBase);
     } else {

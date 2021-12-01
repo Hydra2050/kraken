@@ -72,7 +72,7 @@ class CssBaseSingleWidget extends SingleChildRenderObjectWidget implements CssBa
   @override
   RenderObject createRenderObject(BuildContext context) {
     // return nodeData.createRenderer();
-    return RenderFlex(textDirection: TextDirection.ltr);
+    return RenderFlex(direction: Axis.vertical, textDirection: TextDirection.ltr);
   }
 
   @override
@@ -130,7 +130,7 @@ class CssBaseMultiWidget extends MultiChildRenderObjectWidget implements CssBase
   @override
   RenderObject createRenderObject(BuildContext context) {
     // return nodeData.createRenderer();
-    return RenderFlex(textDirection: TextDirection.ltr);
+    return RenderFlex(direction: Axis.vertical, textDirection: TextDirection.ltr);
   }
 
   @override
@@ -147,12 +147,20 @@ class CssBaseMultiElement extends MultiChildRenderObjectElement implements DomAp
 
   late Element _childElement;
 
+  @override
   void mount(Element? parent, Object? newSlot) {
     // TODO: implement mount
     super.mount(parent, newSlot);
     (widget as CssBaseWidget).nodeData.flutterElement = this;
     (widget as CssBaseWidget).nodeData.didMount();
     RegisterCenter.sharedInstance().testElement = this;
+  }
+
+  @override
+  void unmount() {
+    (widget as CssBaseWidget).nodeData.flutterElement = null;
+    (widget as CssBaseWidget).nodeData.didUnMount();
+    super.unmount();
   }
 
   @override
